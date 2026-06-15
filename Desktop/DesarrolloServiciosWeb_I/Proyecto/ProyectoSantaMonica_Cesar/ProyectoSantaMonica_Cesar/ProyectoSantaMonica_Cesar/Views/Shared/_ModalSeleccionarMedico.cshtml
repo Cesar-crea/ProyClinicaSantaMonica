@@ -1,0 +1,128 @@
+﻿@model IEnumerable<ProyectoSantaMonica_Cesar.Models.Medico>
+
+
+<div class="modal fade" id="modalMedicos" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-semibold">
+                    <i class="bi bi-person-badge me-2"></i>Seleccionar Médico
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+          
+            <!-- BODY -->
+            <div class="modal-body">
+
+                <!-- Buscador -->
+                <div class="input-group mb-3">
+                    <input type="text" id="buscarMedicoInput" class="form-control"
+                           placeholder="Buscar médico por nombre, apellido o Especialidad">
+                    <button type="button" class="btn btn-primary" id="btnBuscarMedico">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+
+                <!-- Tabla -->
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle text-center" id="tablaMedicos">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Especialidad</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var m in Model)
+                                {
+                                    <tr>
+                                        <td>@m.Nombres</td>
+                                        <td>@m.Apellidos</td>
+                                        <td>@m.Especialidad</td>
+                                        <td>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary seleccionar-medico"
+                                                    data-id="@m.Id_Medico"
+                                                    data-nombre="@m.Nombres @m.Apellidos"
+                                                    data-bs-dismiss="modal">
+                                                Seleccionar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-muted">
+                                        No hay médicos disponibles
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Modal */
+    #modalMedicos .modal-dialog {
+        max-width: 800px;
+        margin: 2rem auto;
+    }
+
+    #modalMedicos .modal-content {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    #modalMedicos .modal-header {
+        font-weight: 600;
+    }
+
+    /* Tabla */
+    #modalMedicos table th,
+    #modalMedicos table td {
+        text-align: center;
+        vertical-align: middle;
+        padding: 0.6rem;
+    }
+
+    #modalMedicos table th {
+        background-color: #e9ecef;
+        font-weight: 600;
+    }
+
+    #modalMedicos table tbody tr:hover {
+        background-color: #f1f6ff;
+    }
+
+    /* Botón seleccionar */
+    #modalMedicos .btn-seleccionar-medico {
+        background-color: #28c76f;
+        border: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+        #modalMedicos .btn-seleccionar-medico:hover {
+            background-color: #22b365;
+            transform: translateY(-1px);
+        }
+
+    #modalMedicos table tbody tr {
+        cursor: pointer;
+    }
+</style>
+

@@ -1,0 +1,250 @@
+﻿@model ProyectoSantaMonica_Cesar.Models.Usuario
+@{
+    ViewData["Title"] = "Editar Usuario";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar y Editar Usuario</title>
+
+    <!-- Bootstrap e íconos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fb;
+            color: #333;
+        }
+
+        h2 {
+            font-weight: 600;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .card-form {
+            background-color: #fff;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .card-header-custom {
+            background-color: #007bff;
+            color: white;
+            font-weight: 600;
+            font-size: 1.3rem;
+            border-radius: 16px;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-control, .form-select {
+            font-size: 0.9rem;
+            height: calc(1.8em + 0.75rem + 2px);
+            border-radius: 0.5rem;
+            border: 1px solid #ced4da;
+        }
+
+            .form-control:focus, .form-select:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 0 0.25rem rgba(0,123,255,.25);
+            }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            font-weight: 600;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            color: white;
+            font-weight: 600;
+        }
+
+            .btn-secondary:hover {
+                background-color: #5a6268;
+            }
+
+        .btn-uniforme {
+            height: calc(1.8em + 0.75rem + 2px);
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .preview-img {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #007bff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container mt-4">
+        <h2>Buscar y Editar Usuario</h2>
+
+        <!-- 🔎 BUSCAR -->
+        <div class="card-form mb-4">
+            <form asp-controller="Admin" asp-action="Editar" method="get" class="row g-3 align-items-center">
+                <div class="col-md-6">
+                    <input type="text" name="nombre" class="form-control" placeholder="Ingrese un nombre" required />
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100 btn-uniforme">Buscar</button>
+                </div>
+                <div class="col-md-3">
+                    <a asp-action="Registro" class="btn btn-secondary w-100 btn-uniforme">Regresar</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- ✏️ EDITAR -->
+        @if (Model != null)
+        {
+            <div class="card-form">
+                <div class="card-header-custom">
+                    <i class="bi bi-pencil-square"></i> Editar Usuario
+                </div>
+
+                <form asp-controller="Admin" asp-action="Actualizar" method="post" enctype="multipart/form-data" class="row g-3">
+
+                    <input type="hidden" asp-for="Id_Usuario" />
+
+                    <div class="col-md-6">
+                        <label class="form-label">Usuario</label>
+                        <input asp-for="Username" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Nombres</label>
+                        <input asp-for="Nombres" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Apellidos</label>
+                        <input asp-for="Apellidos" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">DNI</label>
+                        <input asp-for="Dni" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Teléfono</label>
+                        <input asp-for="Telefono" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Correo</label>
+                        <input asp-for="Correo" type="email" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Rol</label>
+                        <select asp-for="Rol" class="form-select">
+                            <option value="ADMINISTRADOR">ADMIN</option>
+                            <option value="CAJERO">CAJERO</option>
+                            <option value="RECEPCIONISTA">RECEPCIONISTA</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Contraseña</label>
+                        <input asp-for="Contrasenia" type="password" class="form-control" />
+                    </div>
+
+                    <!-- Imagen -->
+                    <div class="col-md-6 text-center">
+                        <label class="form-label d-block">Foto de Perfil</label>
+
+                        <img id="preview"
+                             src="@(Model.Img_Perfil ?? "/images/default-user.jpg")"
+                             class="preview-img" />
+
+                        <div class="mt-2">
+                            <input type="file" id="archivoImagen" name="archivoImagen" class="form-control" accept="image/*" />
+                        </div>
+                    </div>
+
+                    <div class="col-12 btn-container mt-3">
+                        <button type="submit" class="btn btn-primary w-50 btn-uniforme">Actualizar</button>
+                        <a asp-controller="Admin" asp-action="Index" class="btn btn-secondary w-50 btn-uniforme">Volver</a>
+                    </div>
+
+                </form>
+            </div>
+        }
+
+    </div>
+
+    <!-- SweetAlert -->
+    <script>
+        let mensaje = '@TempData["mensaje"]';
+        let error = '@TempData["error"]';
+
+        if (mensaje) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: mensaje
+            });
+        }
+
+        if (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error
+            });
+        }
+
+        // Vista previa imagen
+        document.getElementById("archivoImagen")?.addEventListener("change", function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => document.getElementById("preview").src = e.target.result;
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
+</body>
+</html>

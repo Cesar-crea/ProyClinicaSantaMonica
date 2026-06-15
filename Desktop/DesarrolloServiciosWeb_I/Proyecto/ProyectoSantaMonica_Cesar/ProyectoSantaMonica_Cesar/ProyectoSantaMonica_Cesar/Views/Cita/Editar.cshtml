@@ -1,0 +1,626 @@
+﻿@model ProyectoSantaMonica_Cesar.Models.Cita
+
+@{
+    ViewData["Title"] = "Editar Cita";
+}
+
+<title>Editar Cita</title>
+
+<!-- Bootstrap e íconos -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        background-color: #f4f7fb;
+        font-family: 'Poppins', sans-serif;
+        color: #333;
+    }
+
+    .header-bar {
+        background-color: #007bff;
+        color: white;
+        min-height: 70px;
+        border-radius: 12px;
+        padding: 15px 25px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+
+        .header-bar h4 {
+            font-weight: 600;
+            font-size: 1.3rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+    .card-form {
+        background-color: #fff;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+
+        .card-form label {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .card-form input.form-control,
+        .card-form select.form-select,
+        .card-form textarea.form-control {
+            font-size: 0.9rem;
+        }
+
+    .btn-success {
+        background-color: #28c76f;
+        border: none;
+        font-weight: 600;
+    }
+
+        .btn-success:hover {
+            background-color: #22b365;
+        }
+
+    .btn-info {
+        background-color: #17a2b8;
+        color: white;
+        font-weight: 600;
+    }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
+    .btn-ver-horarios {
+        background-color: #6c757d;
+        color: white;
+        font-weight: 600;
+    }
+
+    .modal-dialog {
+        max-width: 800px;
+    }
+
+    .modal-header {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .d-flex-hora {
+        display: flex;
+        gap: .5rem;
+    }
+
+    .alert-custom {
+        border-radius: 10px;
+        font-size: .95rem;
+    }
+</style>
+
+<div class="container mt-4">
+
+    <!-- HEADER -->
+    <div class="header-bar">
+        <h4>
+            <i class="bi bi-pencil-square me-2"></i>
+            Editar Cita
+        </h4>
+    </div>
+
+    <!-- ALERTAS -->
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show alert-custom">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            @TempData["Error"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show alert-custom">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            @TempData["Success"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    }
+
+    <!-- FORM -->
+    <div class="card-form">
+
+        <form asp-action="Editar" method="post">
+
+            <!-- TOKEN -->
+            @Html.AntiForgeryToken()
+
+            <!-- ID -->
+            <input type="hidden" asp-for="Id_Cita" />
+
+            <!-- VALIDACIONES -->
+            <div asp-validation-summary="ModelOnly"
+                 class="alert alert-danger">
+            </div>
+
+            <!-- PACIENTE -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Paciente
+                </label>
+
+                <div class="input-group">
+
+                    <input type="text"
+                           id="pacienteNombre"
+                           class="form-control"
+                           readonly
+                           value="@Model.Paciente?.Nombres @Model.Paciente?.Apellidos" />
+
+                    <input type="hidden"
+                           asp-for="Id_Paciente"
+                           id="pacienteId" />
+
+                    <button type="button"
+                            class="btn btn-info"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalPacientes">
+
+                        <i class="bi bi-search"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- MEDICO -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Médico
+                </label>
+
+                <div class="input-group">
+
+                    <input type="text"
+                           id="medicoNombre"
+                           class="form-control"
+                           readonly
+                           value="@Model.Medico?.Nombres @Model.Medico?.Apellidos" />
+
+                    <input type="hidden"
+                           asp-for="Id_Medico"
+                           id="medicoId" />
+
+                    <button type="button"
+                            class="btn btn-info"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalMedicos">
+
+                        <i class="bi bi-search"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- FECHA Y HORA -->
+            <div class="row mb-3">
+
+                <!-- FECHA -->
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Fecha
+                    </label>
+
+                    <input type="date"
+                           asp-for="Fecha"
+                           class="form-control"
+                           id="fechaCita"
+                           value="@(Model.Fecha.ToString("yyyy-MM-dd"))" />
+
+                    <span asp-validation-for="Fecha"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <!-- HORA -->
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Hora
+                    </label>
+
+                    <div class="d-flex-hora">
+
+                        <select asp-for="Hora"
+                                class="form-select"
+                                id="horaCita">
+
+                            <option value="">
+                                Seleccionar
+                            </option>
+
+                            @for (int h = 8; h <= 22; h++)
+                            {
+                                var hora = $"{h:00}:00";
+                                var actual = Model.Hora.ToString(@"hh\:mm");
+
+                                if (actual == hora)
+                                {
+                                    <option value="@hora" selected>
+                                        @hora
+                                    </option>
+                                }
+                                else
+                                {
+                                    <option value="@hora">
+                                        @hora
+                                    </option>
+                                }
+                            }
+
+                        </select>
+
+                        <button type="button"
+                                class="btn btn-info"
+                                onclick="abrirHorarios()">
+
+                            Ver horarios
+
+                        </button>
+
+                    </div>
+
+                    <span asp-validation-for="Hora"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- MOTIVO -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Motivo
+                </label>
+
+                <textarea asp-for="Motivo"
+                          class="form-control"
+                          rows="3">
+                </textarea>
+
+                <span asp-validation-for="Motivo"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <!-- MODAL -->
+            <div id="modalHorariosContainer"></div>
+
+            <!-- BOTONES -->
+            <div class="d-flex justify-content-between">
+
+                <a asp-action="Listar"
+                   class="btn btn-secondary w-50 me-1">
+
+                    Cancelar
+
+                </a>
+
+                <button type="submit"
+                        class="btn btn-success w-50 ms-1">
+
+                    Guardar cambios
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- MODAL PACIENTE -->
+<partial name="~/Views/Shared/_modalSeleccionarPaciente.cshtml"
+         model="ViewBag.Pacientes" />
+
+<!-- MODAL MEDICO -->
+<partial name="~/Views/Shared/_modalSeleccionarMedico.cshtml"
+         model="ViewBag.Medicos" />
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@section Scripts {
+
+    <!-- VALIDACIONES -->
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="@Url.Content("~/js/citas.js")"></script>
+
+    <script>
+
+        // =========================================
+        // ALERTAS SWEETALERT
+        // =========================================
+
+        @if (TempData["Error"] != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '@TempData["Error"]',
+                        confirmButtonColor: '#d33'
+                    });
+            </text>
+        }
+
+        @if (TempData["Success"] != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Correcto',
+                        text: '@TempData["Success"]',
+                        confirmButtonColor: '#28c76f'
+                    });
+            </text>
+        }
+
+        // =========================================
+        // BUSCAR CON ENTER
+        // =========================================
+
+        document.getElementById("buscarPacienteInput")
+            .addEventListener("keyup", function (e) {
+
+                if (e.key === "Enter") {
+                    buscarPaciente();
+                }
+
+            });
+
+        document.getElementById("buscarMedicoInput")
+            .addEventListener("keyup", function (e) {
+
+                if (e.key === "Enter") {
+                    buscarMedico();
+                }
+
+            });
+
+        // =========================================
+        // RECARGAR LISTA
+        // =========================================
+
+        document.getElementById("buscarPacienteInput")
+            .addEventListener("input", function () {
+
+                if (this.value.trim() === "") {
+                    buscarPaciente();
+                }
+
+            });
+
+        document.getElementById("buscarMedicoInput")
+            .addEventListener("input", function () {
+
+                if (this.value.trim() === "") {
+                    buscarMedico();
+                }
+
+            });
+
+        // =========================================
+        // BUSCAR PACIENTE
+        // =========================================
+
+        document.getElementById("btnBuscarPaciente")
+            .addEventListener("click", buscarPaciente);
+
+        async function buscarPaciente() {
+
+            let texto =
+                document.getElementById("buscarPacienteInput")
+                    .value.trim();
+
+            if (texto === "") {
+                texto = " ";
+            }
+
+            const response =
+                await fetch(`/Paciente/Buscar?texto=${encodeURIComponent(texto)}`);
+
+            const data = await response.json();
+
+            let tbody =
+                document.querySelector("#tablaPacientes tbody");
+
+            tbody.innerHTML = "";
+
+            if (data.length === 0) {
+
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4"
+                            class="text-center text-muted">
+
+                            No se encontraron pacientes
+
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+            data.forEach(p => {
+
+                const nombreCompleto =
+                    `${p.nombres} ${p.apellidos}`;
+
+                tbody.innerHTML += `
+                    <tr>
+
+                        <td>${p.nombres}</td>
+
+                        <td>${p.apellidos}</td>
+
+                        <td>${p.dni}</td>
+
+                        <td>
+
+                            <button type="button"
+                                    class="btn btn-sm btn-primary"
+                                    onclick="seleccionarPaciente(
+                                        ${p.id},
+                                        \`${nombreCompleto}\`
+                                    )">
+
+                                Seleccionar
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+                `;
+            });
+        }
+
+        // =========================================
+        // SELECCIONAR PACIENTE
+        // =========================================
+
+        function seleccionarPaciente(id, nombre) {
+
+            document.getElementById("pacienteId").value = id;
+
+            document.getElementById("pacienteNombre").value = nombre;
+
+            bootstrap.Modal
+                .getInstance(document.getElementById('modalPacientes'))
+                .hide();
+        }
+
+        // =========================================
+        // BUSCAR MEDICO
+        // =========================================
+
+        document.getElementById("btnBuscarMedico")
+            .addEventListener("click", buscarMedico);
+
+        async function buscarMedico() {
+
+            let texto =
+                document.getElementById("buscarMedicoInput")
+                    .value.trim();
+
+            if (texto === "") {
+                texto = " ";
+            }
+
+            const response =
+                await fetch(`/Medico/Buscar?texto=${encodeURIComponent(texto)}`);
+
+            const data = await response.json();
+
+            let tbody =
+                document.querySelector("#tablaMedicos tbody");
+
+            tbody.innerHTML = "";
+
+            if (data.length === 0) {
+
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4"
+                            class="text-center text-muted">
+
+                            No se encontraron médicos
+
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+            data.forEach(m => {
+
+                const nombreCompleto =
+                    `${m.nombres} ${m.apellidos}`;
+
+                tbody.innerHTML += `
+                    <tr>
+
+                        <td>${m.nombres}</td>
+
+                        <td>${m.apellidos}</td>
+
+                        <td>${m.especialidad}</td>
+
+                        <td>
+
+                            <button type="button"
+                                    class="btn btn-sm btn-primary"
+                                    onclick="seleccionarMedico(
+                                        ${m.id},
+                                        \`${nombreCompleto}\`
+                                    )">
+
+                                Seleccionar
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+                `;
+            });
+        }
+
+        // =========================================
+        // SELECCIONAR MEDICO
+        // =========================================
+
+        function seleccionarMedico(id, nombre) {
+
+            document.getElementById("medicoId").value = id;
+
+            document.getElementById("medicoNombre").value = nombre;
+
+            bootstrap.Modal
+                .getInstance(document.getElementById('modalMedicos'))
+                .hide();
+        }
+
+    </script>
+}

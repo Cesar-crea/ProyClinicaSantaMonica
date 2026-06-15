@@ -1,0 +1,235 @@
+﻿@model IEnumerable<ProyectoSantaMonica_Cesar.Models.ComprobanteDePago>
+
+@{
+    ViewData["Title"] = "Lista de Comprobantes";
+    var texto = ViewBag.Texto as string;
+    var success = TempData["success"] as string;
+    var error = TempData["error"] as string;
+}
+
+@section Styles {
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            background-color: #f4f7fb;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+
+        .card {
+            border: none;
+            border-radius: 16px;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            max-width: 1200px;
+            margin: 50px auto;
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            border-radius: 16px 16px 0 0;
+            padding: 20px 25px;
+        }
+
+            .card-header h4 {
+                margin: 0;
+                font-weight: 600;
+            }
+
+        .btn-success {
+            background-color: #28c76f;
+            border: none;
+        }
+
+            .btn-success:hover {
+                background-color: #22b365;
+            }
+
+        .btn-info {
+            background-color: #4ba3ff;
+            color: white;
+            border: none;
+        }
+
+            .btn-info:hover {
+                background-color: #2f8ae0;
+            }
+
+        .btn-warning {
+            background-color: #fcd34d;
+            border: none;
+        }
+
+            .btn-warning:hover {
+                background-color: #fbbf24;
+            }
+
+        .table thead {
+            background-color: #eaf2ff;
+            color: #0056b3;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #f8fbff;
+        }
+
+        .table tbody tr:hover {
+            background-color: #edf4ff;
+        }
+
+        .no-data {
+            color: #777;
+            font-style: italic;
+        }
+
+        .top-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    </style>
+}
+
+<div class="container">
+    <div class="card">
+
+        <!-- HEADER -->
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4><i class="bi bi-receipt me-2"></i>Lista de Comprobantes de Pago</h4>
+        </div>
+
+   
+
+            <!-- BOTONES -->
+            <div class="top-buttons mt-3">
+                <a asp-action="Registrar" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Registrar Comprobante
+                </a>
+            </div>
+
+            <!-- BUSCADOR -->
+            <form asp-action="Listar" method="get" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="texto" value="@texto" class="form-control" placeholder="Buscar por nombre o apellido" />
+                    <button class="btn btn-primary">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
+
+            <!-- TABLA -->
+            <div class="table-responsive">
+                <table class="table table-bordered text-center align-middle">
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Pagador</th>
+                            <th>DNI</th>
+                            <th>Paciente</th>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var c in Model)
+                            {
+                                <tr>
+                                    <td>@c.Id_Comprobante</td>
+                                    <td>@c.Nombre_Pagador @c.Apellidos_Pagador</td>
+                                    <td>@c.Dni_Pagador</td>
+                                    <td>@c.Cita?.Paciente?.Nombres @c.Cita?.Paciente?.Apellidos</td>
+                                    <td>@c.Fecha_Emision.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@c.Monto.ToString("0.00")</td>
+                                    <td>
+                                        @if (c.Estado.ToString() == "ANULADO")
+                                        {
+                                            <span class="badge bg-danger">ANULADO</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">EMITIDO</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-action="Detalle" asp-route-id="@c.Id_Comprobante" class="btn btn-info btn-sm">
+                                            Detalle
+                                        </a>
+
+                                        @if (c.Estado.ToString() != "ANULADO")
+                                        {
+                                            <button class="btn btn-warning btn-sm"
+                                                    onclick="confirmarAnular(@c.Id_Comprobante)">
+                                                Anular
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-warning btn-sm" disabled>
+                                                Anular
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="no-data">No se encontraron comprobantes</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function confirmarAnular(id) {
+            Swal.fire({
+                title: '¿Está seguro?',
+                text: "No podrá revertir esta acción.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, anular'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/ComprobanteDePago/Anular?id=' + id;
+                }
+            });
+        }
+
+        var success = '@success';
+        var error = '@error';
+
+        if (success)
+            Swal.fire("Éxito", success, "success");
+
+        if (error)
+            Swal.fire("Error", error, "error");
+
+            console.log("INPUT:", document.getElementById("Id_Cita"));
+    </script>
+}

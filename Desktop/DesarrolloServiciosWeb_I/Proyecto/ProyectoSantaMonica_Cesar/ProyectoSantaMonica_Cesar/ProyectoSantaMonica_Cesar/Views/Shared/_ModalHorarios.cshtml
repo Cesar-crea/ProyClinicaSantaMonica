@@ -1,0 +1,133 @@
+﻿@model ProyectoSantaMonica_Cesar.Models.ViewModels.HorariosViewModel
+
+<!-- Modal Horarios -->
+<div class="modal fade" id="modalHorarios" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-clock me-2"></i>Horarios del médico
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body">
+
+                <!-- HORARIOS REGULARES -->
+                <h6 class="fw-bold mb-2">Horarios regulares</h6>
+
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered text-center align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Día</th>
+                                <th>Desde</th>
+                                <th>Hasta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model?.Horarios != null && Model.Horarios.Any())
+                            {
+                                foreach (var h in Model.Horarios)
+                                {
+                                    <tr>
+                                        <td>@h.Dia_Semana</td>
+                                        <td>@h.Horario_Entrada?.ToString(@"hh\:mm")</td>
+                                        <td>@h.Horario_Salida?.ToString(@"hh\:mm")</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-muted">
+                                        No hay horarios registrados
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- HORARIOS OCUPADOS -->
+                <h6 class="fw-bold mt-3 mb-2">Horarios ocupados</h6>
+
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered text-center align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Hora</th>
+                                <th>Paciente</th>
+                                <th>Motivo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model?.Ocupadas != null && Model.Ocupadas.Any())
+                            {
+                                foreach (var c in Model.Ocupadas)
+                                {
+                                    <tr>
+                                        <td>@c.Hora.ToString(@"hh\:mm")</td>
+                                        <td>@($"{c.Paciente?.Nombres} {c.Paciente?.Apellidos}")</td>
+                                        <td>@c.Motivo</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-muted">
+                                        No hay citas ocupadas
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ESTILOS -->
+<style>
+    .modal-dialog {
+        max-width: 850px;
+        margin: 2rem auto;
+    }
+
+    .modal-content {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .modal-header {
+        font-weight: 600;
+    }
+
+    .modal-body {
+        padding: 1.2rem 1.5rem;
+    }
+
+    .modal table th {
+        background-color: #f1f3f5;
+        font-weight: 600;
+    }
+
+    .modal table td {
+        padding: 0.55rem;
+    }
+</style>

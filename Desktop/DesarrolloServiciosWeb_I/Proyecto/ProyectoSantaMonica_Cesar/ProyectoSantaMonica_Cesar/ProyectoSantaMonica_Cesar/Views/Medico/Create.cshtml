@@ -1,0 +1,183 @@
+﻿@model ProyectoSantaMonica_Cesar.Models.Medico
+
+@{
+    ViewData["Title"] = "Registrar Médico";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Médico</title>
+
+    <!-- Bootstrap e íconos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f7fb;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+
+        .card-form {
+            background-color: #fff;
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 4px 12px rgba(0,123,0,0.15);
+            margin-bottom: 30px;
+            width: 80%;
+        }
+
+        .card-header-custom {
+            background-color: #28c76f;
+            color: white;
+            font-weight: 600;
+            font-size: 1.3rem;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .form-control, .form-select {
+            font-size: 0.95rem;
+            height: calc(1.8em + 0.75rem + 2px);
+            border-radius: 8px;
+            border: 1px solid #28c76f;
+        }
+
+            .form-control:focus, .form-select:focus {
+                border-color: #22b365;
+                box-shadow: 0 0 0 0.2rem rgba(40,199,111,.25);
+            }
+
+        .btn-success {
+            background-color: #28c76f;
+            border: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+            .btn-success:hover {
+                background-color: #22b365;
+            }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            color: white;
+        }
+
+            .btn-secondary:hover {
+                background-color: #5a6268;
+            }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container d-flex justify-content-center mt-5">
+        <div class="card-form">
+
+            <div class="card-header-custom">
+                <i class="bi bi-person-plus me-2"></i> Registrar Médico
+            </div>
+
+            <div class="card-body">
+
+                <form asp-action="Create" asp-controller="Medico" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombres:</label>
+                            <input asp-for="Nombres" class="form-control" required />
+                            <span asp-validation-for="Nombres" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Apellidos:</label>
+                            <input asp-for="Apellidos" class="form-control" required />
+                            <span asp-validation-for="Apellidos" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+
+                        <div class="col-md-4">
+                            <label class="form-label">DNI:</label>
+                            <input asp-for="Dni" class="form-control"
+                                   maxlength="8" pattern="[0-9]{8}" inputmode="numeric"
+                                   title="Ingrese exactamente 8 dígitos numéricos" required />
+                            <span asp-validation-for="Dni" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">N° Colegiatura:</label>
+                            <input asp-for="Nro_Colegiatura" class="form-control" required />
+                            <span asp-validation-for="Nro_Colegiatura" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Teléfono:</label>
+                            <input asp-for="Telefono" class="form-control"
+                                   maxlength="9" pattern="[0-9]{7,9}" inputmode="numeric"
+                                   title="Ingrese un número de teléfono válido (hasta 9 dígitos)" />
+                            <span asp-validation-for="Telefono" class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Especialidad:</label>
+                        <select asp-for="Id_Especialidad" class="form-select" asp-items="ViewBag.Especialidades" required>
+                            <option value="">-- Seleccione --</option>
+                        </select>
+                        <span asp-validation-for="Id_Especialidad" class="text-danger"></span>
+                    </div>
+
+                    <div class="btn-container">
+                        <button type="submit" class="btn btn-success flex-grow-1">
+                            <i class="bi bi-save me-1"></i> Guardar
+                        </button>
+
+                        <a asp-controller="Medico" asp-action="Index" class="btn btn-secondary flex-grow-1">
+                            <i class="bi bi-arrow-left-circle me-1"></i> Volver
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Validaciones cliente -->
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+</body>
+</html>

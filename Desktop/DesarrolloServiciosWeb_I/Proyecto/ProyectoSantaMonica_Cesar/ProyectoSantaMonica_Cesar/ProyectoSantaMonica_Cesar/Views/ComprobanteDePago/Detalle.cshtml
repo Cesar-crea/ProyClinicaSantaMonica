@@ -1,0 +1,135 @@
+﻿@model ProyectoSantaMonica_Cesar.Models.ComprobanteDePago
+
+@{
+    ViewData["Title"] = "Detalle Comprobante";
+}
+
+@section Styles {
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fb;
+            color: #333;
+            padding-bottom: 30px;
+        }
+
+        .header-bar {
+            background-color: #4ba3ff;
+            color: #fff;
+            min-height: 70px;
+            border-radius: 12px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+            .header-bar h2 {
+                font-weight: 600;
+                font-size: 1.3rem;
+                margin: 0;
+            }
+
+        .card-detail {
+            background-color: #fff;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+            .card-detail h5 {
+                font-weight: 600;
+                margin-bottom: 15px;
+            }
+
+            .card-detail p {
+                font-size: 0.95rem;
+                margin-bottom: 0.8rem;
+            }
+
+        .btn-back {
+            font-weight: 600;
+        }
+    </style>
+}
+
+<div class="container mt-4">
+
+    <!-- HEADER -->
+    <div class="header-bar">
+        <h2><i class="bi bi-receipt me-2"></i>Detalle del Comprobante de Pago</h2>
+    </div>
+
+    <!-- INFORMACIÓN DEL COMPROBANTE -->
+    <div class="card-detail">
+        <h5>Información del Comprobante</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>ID:</strong> @Model.Id_Comprobante</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Estado:</strong> @Model.Estado</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Fecha de Emisión:</strong> @Model.Fecha_Emision.ToString("dd/MM/yyyy HH:mm")</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Monto:</strong> S/ @Model.Monto.ToString("0.00")</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Método de Pago:</strong> @Model.Metodo_Pago</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DATOS DEL PAGADOR -->
+    <div class="card-detail">
+        <h5>Datos del Pagador</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Nombre:</strong> @Model.Nombre_Pagador @Model.Apellidos_Pagador</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>DNI:</strong> @Model.Dni_Pagador</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Contacto:</strong> @Model.Contacto_Pagador</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DATOS DE LA CITA -->
+    <div class="card-detail">
+        <h5>Datos de la Cita</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Paciente:</strong> @Model.Cita?.Paciente?.Nombres @Model.Cita?.Paciente?.Apellidos</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Médico:</strong> @Model.Cita?.Medico?.Nombres @Model.Cita?.Medico?.Apellidos</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Fecha:</strong> @Model.Cita?.Fecha.ToString("dd/MM/yyyy")</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Hora:</strong> @Model.Cita?.Hora</p>
+            </div>
+            <div class="col-12">
+                <p><strong>Motivo:</strong> @Model.Cita?.Motivo</p>
+            </div>
+            <div class="col-12">
+                <p><strong>Registrado por:</strong> @Model.Cita?.Usuario?.Nombres @Model.Cita?.Usuario?.Apellidos</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTÓN -->
+    <div class="text-center">
+        <a asp-action="Listar" class="btn btn-secondary btn-back px-4 mt-3">
+            <i class="bi bi-arrow-left-circle me-1"></i> Volver
+        </a>
+    </div>
+
+</div>

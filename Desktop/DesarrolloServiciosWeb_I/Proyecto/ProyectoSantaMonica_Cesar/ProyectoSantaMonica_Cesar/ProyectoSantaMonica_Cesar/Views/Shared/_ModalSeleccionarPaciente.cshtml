@@ -1,0 +1,125 @@
+﻿@model IEnumerable<ProyectoSantaMonica_Cesar.Models.Paciente>
+
+<div class="modal fade" id="modalPacientes" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-semibold">
+                    <i class="bi bi-person me-2"></i>Seleccionar Paciente
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body">
+
+                <!-- Buscador -->
+                <div class="input-group mb-3">
+                    <input type="text" id="buscarPacienteInput" class="form-control"
+                           placeholder="Buscar paciente por nombre o apellido">
+                    <button type="button" class="btn btn-primary" id="btnBuscarPaciente">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+               
+                <!-- Tabla -->
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle text-center" id="tablaPacientes">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>DNI</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var p in Model)
+                                {
+                                    <tr>
+                                        <td>@p.Nombres</td>
+                                        <td>@p.Apellidos</td>
+                                        <td>@p.Dni</td>
+                                        <td>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary seleccionar-paciente"
+                                                    data-id="@p.Id_Paciente"
+                                                    data-nombre="@p.Nombres @p.Apellidos">
+                                                Seleccionar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-muted">
+                                        No hay pacientes disponibles
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Modal */
+    #modalPacientes .modal-dialog {
+        max-width: 800px;
+        margin: 2rem auto;
+    }
+
+    #modalPacientes .modal-content {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    #modalPacientes .modal-header {
+        font-weight: 600;
+    }
+
+    /* Tabla */
+    #modalPacientes table th,
+    #modalPacientes table td {
+        text-align: center;
+        vertical-align: middle;
+        padding: 0.6rem;
+    }
+
+    #modalPacientes table th {
+        background-color: #e9ecef;
+        font-weight: 600;
+    }
+
+    #modalPacientes table tbody tr:hover {
+        background-color: #f1f6ff;
+    }
+
+    /* Botón seleccionar */
+    #modalPacientes .btn-seleccionar-paciente {
+        background-color: #28c76f;
+        border: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+        #modalPacientes .btn-seleccionar-paciente:hover {
+            background-color: #22b365;
+            transform: translateY(-1px);
+        }
+
+    .btn-seleccionar-paciente {
+        cursor: pointer;
+    }
+</style>

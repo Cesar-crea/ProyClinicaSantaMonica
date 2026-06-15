@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Panel Recepcionista</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    @RenderSection("Styles", required: false)
+
+    <style>
+        .navbar-custom {
+            background-color: #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding: 0.8rem 1rem;
+        }
+
+        .navbar-nav .nav-link {
+            color: #333;
+            font-weight: 500;
+            margin: 0 1rem;
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: #0d6efd;
+            }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-right: 1rem;
+        }
+
+            .user-info img {
+                width: 35px;
+                height: 35px;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 1px solid #ccc;
+                margin-right: 0.5rem;
+            }
+
+        .btn-logout {
+            border: 1px solid #0d6efd;
+            color: #0d6efd;
+        }
+
+            .btn-logout:hover {
+                background-color: #0d6efd;
+                color: white;
+            }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+
+            <!-- Logo -->
+            <a class="navbar-brand me-4" asp-controller="Recepcionista" asp-action="Index">
+                <img src="~/images/ClinicaStaMonicaLogoP.png" width="200" alt="Logo">
+            </a>
+
+            <!-- Botón hamburguesa -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMenu">
+
+                <!-- Menú -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Recepcionista" asp-action="Index">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Paciente" asp-action="Index">Pacientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Cita" asp-action="Listar">Citas</a>
+                    </li>
+                </ul>
+
+                <!-- Usuario -->
+                <div class="d-flex align-items-center">
+
+                    <div class="user-info">
+                        <img src="@(string.IsNullOrEmpty(ViewBag.UsuarioImg) ? "/images/default-user.jpg" : ViewBag.UsuarioImg)" />
+                        <div class="text-end">
+                            <strong>@ViewBag.UsuarioNombre</strong> |
+                            <small>@ViewBag.UsuarioRol</small>
+                        </div>
+                    </div>
+
+
+                    <form asp-controller="Usuario" asp-action="Logout" method="post">
+                        <button type="submit" class="btn btn-logout">Cerrar sesión</button>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <main class="container mt-4">
+        @RenderBody()
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/citas.js"></script>
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

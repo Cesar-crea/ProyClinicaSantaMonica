@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Panel Administrador</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    @RenderSection("Styles", required: false)
+
+    <style>
+        .navbar-custom {
+            background-color: #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding: 0.8rem 1rem;
+        }
+
+        .navbar-nav .nav-link {
+            color: #333;
+            font-weight: 500;
+            margin: 0 1rem;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #0d6efd;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-right: 1rem;
+        }
+
+        .user-info img {
+            width: 35px;
+            height: 35px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            margin-right: 0.5rem;
+        }
+
+        .btn-logout {
+            border: 1px solid #0d6efd;
+            color: #0d6efd;
+        }
+
+        .btn-logout:hover {
+            background-color: #0d6efd;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+
+            <!-- Logo -->
+            <a class="navbar-brand me-4" asp-controller="Admin" asp-action="Index">
+                <img src="~/images/ClinicaStaMonicaLogoP.png" width="200" alt="Logo">
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMenu">
+
+                <!-- Menú -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Admin" asp-action="Index">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Admin" asp-action="Registro">Usuarios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Medico" asp-action="Index">Médicos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Especialidad" asp-action="Listar">Especialidad</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Horario" asp-action="GestionarHorarios">Horarios</a>
+                    </li>
+                </ul>
+
+                <!-- Usuario -->
+                <div class="d-flex align-items-center">
+
+                    <div class="user-info">
+                        <img src="@(ViewBag.UsuarioImg ?? "/images/default-user.jpg")" />
+
+                        <div class="text-end">
+                            <strong>@ViewBag.UsuarioNombre</strong> |
+                            <small>@ViewBag.UsuarioRol</small>
+                        </div>
+                    </div>
+
+                    <form asp-controller="Usuario" asp-action="Logout" method="post">
+                        <button type="submit" class="btn btn-logout">Cerrar sesión</button>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido -->
+    <main class="container mt-4">
+        @RenderBody()
+    </main>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

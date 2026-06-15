@@ -1,0 +1,187 @@
+﻿@model ProyectoSantaMonica_Cesar.Models.Cita
+@using ProyectoSantaMonica_Cesar.Models.enums
+
+@{
+    ViewData["Title"] = "Editar Cita";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    body {
+        background-color: #f4f7fb;
+        font-family: 'Poppins', sans-serif;
+        color: #333;
+    }
+
+    .header-bar {
+        background-color: #007bff;
+        color: white;
+        min-height: 70px;
+        border-radius: 12px;
+        padding: 15px 25px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .card-form {
+        background-color: #fff;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    .btn-success {
+        background-color: #28c76f;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .d-flex-hora {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .modal-dialog {
+        max-width: 800px;
+    }
+</style>
+
+<div class="container mt-4">
+
+    <div class="header-bar">
+        <h4><i class="bi bi-pencil-square"></i> Editar Cita</h4>
+    </div>
+
+    <div class="card-form">
+
+        <form asp-action="Actualizar" method="post">
+
+            <input type="hidden" asp-for="Id_Cita" />
+            <input type="hidden" asp-for="Id_Paciente" />
+            <input type="hidden" asp-for="Id_Medico" />
+
+            <!-- Paciente / Médico -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label>Paciente</label>
+                    <input class="form-control" readonly
+                           value="@Model.Paciente?.Nombres @Model.Paciente?.Apellidos" />
+                </div>
+
+                <div class="col-md-6">
+                    <label>Médico</label>
+                    <input class="form-control" readonly
+                           value="@Model.Medico?.Nombres @Model.Medico?.Apellidos" />
+                </div>
+            </div>
+
+            <!-- Motivo -->
+            <div class="mb-3">
+                <label>Motivo</label>
+                <textarea asp-for="Motivo" class="form-control"></textarea>
+            </div>
+
+            <!-- Fecha / Hora -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label>Fecha</label>
+                    <input type="date" asp-for="Fecha" id="Fecha" class="form-control" />
+                </div>
+
+                <div class="col-md-6">
+    <label>Fecha</label>
+    <input type="date" asp-for="Fecha" id="Fecha" class="form-control" />
+</div>
+
+<div class="col-md-6">
+    <label>Hora</label>
+    <div class="d-flex-hora">
+
+                        <select asp-for="Hora" class="form-select">
+                            <option value="">Seleccionar</option>
+
+                            @for (int h = 8; h <= 22; h++)
+                            {
+                                var hora = $"{h:D2}:00";
+                                <option value="@hora" selected="@(Model.Hora.ToString(@"hh\:mm") == hora)">
+                                    @hora
+                                </option>
+                            }
+                        </select>
+
+        <button type="button" class="btn btn-info"
+                onclick="mostrarHorarios(@Model.Id_Medico)">
+            Ver horarios
+        </button>
+
+    </div>
+</div>
+            </div>
+
+            <!-- Modal -->
+            <div id="modalHorariosContainer"></div>
+
+            <!-- Botones -->
+            <div class="d-flex justify-content-between mt-3">
+                <a asp-action="Listar" class="btn btn-secondary w-50 me-1">Cancelar</a>
+                <button type="submit" class="btn btn-success w-50 ms-1">Guardar Cambios</button>
+            </div>
+
+        </form>
+    </div>
+   
+</div>
+
+<script>
+       function mostrarHorarios(idMedico) {
+        let fecha = document.getElementById("Fecha").value;
+
+        if (!fecha) {
+            Swal.fire("Error", "Seleccione una fecha", "error");
+            return;
+        }
+
+        fetch(`/Cita/HorariosOcupados?idMedico=${idMedico}&fecha=${fecha}`)
+            .then(r => r.json())
+            .then(data => {
+
+                let html = `<div class="modal fade show" style="display:block">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>Horarios ocupados</h5>
+                        <button onclick="cerrarModal()" class="btn-close"></button>
+                    </div>
+                    <div class="modal-body">`;
+
+                if (data.length === 0) {
+                    html += "<p>No hay citas ocupadas</p>";
+                } else {
+                    data.forEach(h => {
+                        html += `<span class="badge bg-danger m-1">${h}</span>`;
+                    });
+                }
+
+                html += `</div></div></div></div>`;
+
+                document.getElementById("modalHorariosContainer").innerHTML = html;
+            });
+    }
+
+    function cerrarModal() {
+        document.getElementById("modalHorariosContainer").innerHTML = "";
+    }
+
+    let success = '@TempData["Success"]';
+    let error = '@TempData["Error"]';
+
+    if (success) Swal.fire("Éxito", success, "success");
+    if (error) Swal.fire("Error", error, "error");
+</script>
